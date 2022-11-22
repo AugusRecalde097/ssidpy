@@ -2,7 +2,7 @@ from tkinter import *
 from tkinter import ttk
 import subprocess
 import re
-import qrcode
+import qrcode  
 import tkinter as tk 
 
 # Función para generar un código qr
@@ -21,12 +21,13 @@ def generate_qr_code(ssid, password, image=True):
         img = qr.make_image()
         img.save("./redes_guardadas/"+file_name)
         img.show("./redes_guardadas/"+file_name)
-        print(f"QR code has been saved to {file_name}")
+        # print(f"QR code has been saved to {file_name}")
     else:
         qr.make()
         qr.print_tty()
 # =================================================================
 def Buscarred_label(name):
+
     profile_info_pass = subprocess.run(["netsh", "wlan", "show", "profiles", name,"key=clear"], capture_output = True).stdout.decode('latin-1')
     error =  re.findall('No se encuentra el perfil', profile_info_pass)
     
@@ -46,7 +47,7 @@ def Buscarred_label(name):
         red_label['text'] = "SSID: "+name
         red_label['fg'] = "white"
         red_label['bg'] = "#5fb878"
-        print(cifrado)
+        # print(cifrado)
         cifrado_label['text'] = "Cifrado: "+cifrado[0]
         cifrado_label['fg'] = "white"
         cifrado_label['bg'] = "#5fb878"
@@ -81,8 +82,9 @@ def mostrar_text(self):
 # ====================================== #
 window = Tk()
 window.geometry("300x250")
+window.title("Redes guardadas en la computadora")
 # Titulo
-etiqueta = Label(window, text="Lista de red_labeles guardadas")
+etiqueta = Label(window, text="Lista de Redes")
 etiqueta.pack(side=TOP)
 selected_profile= tk.StringVar()
 
