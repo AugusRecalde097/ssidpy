@@ -4,6 +4,11 @@ import subprocess
 import re
 import qrcode  
 import tkinter as tk 
+import os
+
+def crear_carpeta_qr():
+    if not os.path.isdir(directorio):
+        os.mkdir(directorio)
 
 # Función para generar un código qr
 def generate_qr_code(ssid, password, image=True):
@@ -19,8 +24,8 @@ def generate_qr_code(ssid, password, image=True):
     if image:
         file_name = ssid.replace(" ", "_") + ".png"
         img = qr.make_image()
-        img.save("./redes_guardadas/"+file_name)
-        img.show("./redes_guardadas/"+file_name)
+        img.save(directorio+"/"+file_name)
+        img.show(directorio+"/"+file_name)
         # print(f"QR code has been saved to {file_name}")
     else:
         qr.make()
@@ -81,7 +86,7 @@ def mostrar_text(self):
 #         Configuraciones generales      #
 # ====================================== #
 window = Tk()
-window.geometry("300x250")
+window.geometry("300x300")
 window.title("Redes guardadas en la computadora")
 # Titulo
 etiqueta = Label(window, text="Lista de Redes")
@@ -89,7 +94,7 @@ etiqueta.pack(side=TOP)
 selected_profile= tk.StringVar()
 
 canvas = Canvas(window, bg="yellow",
-		height=250, width=300)
+		height=300, width=300)
 canvas.pack()
 
 
@@ -108,6 +113,18 @@ cifrado_label = Label(window)
 cifrado_label.pack()
 cifrado_label.place(x=30, y=200, width=240,height=30)
 
-mostrar_perfiles()
+ayuda_label = Label(window, text='Los códigos QR se encuentran en \n la carpeta redes_guardadas de la carpeta Documentos.') 
+ayuda_label.pack()
+ayuda_label.place(x=0, y=250, width=300,height=50)
+ayuda_label['fg'] = "white"
+ayuda_label['bg'] = "#5fb878"
 
+entorno = os.environ
+entorno['USERPROFILE']
+ # Se define el nombre de la carpeta o directorio a crear
+directorio = entorno['USERPROFILE']+"/Documents/redes_guardadas"
+
+
+mostrar_perfiles()
+crear_carpeta_qr()
 window.mainloop()
