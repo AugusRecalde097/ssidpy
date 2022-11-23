@@ -80,21 +80,23 @@ def mostrar_text(self):
 window = Tk()
 window.geometry("300x300")
 window.title("Redes guardadas en la computadora")
+window.configure(bg='#798c93')
+window.resizable(False, False)
 # Titulo
-etiqueta = Label(window, text="Lista de Redes")
+etiqueta = Label(window, text="Lista de Redes", bg= '#798c93', fg='white')
 etiqueta.pack(side=TOP)
 selected_profile= tk.StringVar()
 
-canvas = Canvas(window, bg="#798c93",
-		height=300, width=300)
-canvas.pack()
+# canvas = Canvas(window, bg="#798c93",
+# 		height=300, width=300)
+# canvas.pack()
 
 
 # LISTA DE red_labelES.
 profiles_combo = ttk.Combobox(window, textvariable=selected_profile)
  # NOMBRE DE LA red_label.
 red_label = Label(window)
-red_label.pack()
+red_label.pack(anchor=CENTER)
 red_label.place(x=30,y=100,width=240,height=30)
 # CONTRASEÑA DE LA red_label. 
 pass_label = Label(window)
