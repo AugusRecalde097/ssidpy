@@ -31,7 +31,7 @@ def generate_qr_code(ssid, password, image=True):
         qr.make()
         qr.print_tty()
 # =================================================================
-def Buscarred_label(name):
+def search_profiles(name):
 
     profile_info_pass = subprocess.run(["netsh", "wlan", "show", "profiles", name,"key=clear"], capture_output = True).stdout.decode('latin-1')
     error =  re.findall('No se encuentra el perfil', profile_info_pass)
@@ -51,8 +51,8 @@ def Buscarred_label(name):
         
         generate_qr_code(name, password[0])
         
-
-def mostrar_perfiles():
+# =================================================================
+def show_profiles_combo():
     profiles_info = subprocess.run(["netsh", "wlan", "show", "profiles"], capture_output = True).stdout.decode('latin-1')
     lista_perfiles = re.findall("Perfil de todos los usuarios     : (.*)\r", profiles_info)
 
@@ -67,13 +67,13 @@ def mostrar_perfiles():
     profiles_combo['state'] = 'readonly'
     # place the widget
     profiles_combo.pack(fill=tk.X, padx=5, pady=5)
-    profiles_combo.bind('<<ComboboxSelected>>', mostrar_text)
+    profiles_combo.bind('<<ComboboxSelected>>', show_profile_selected)
     profiles_combo.place(x=10,y=30,width=280,height=30)
-
-def mostrar_text(self):
+# =================================================================
+def show_profile_selected(self):
     name = selected_profile.get()
-    Buscarred_label(name)
-
+    search_profiles(name)
+# =================================================================
 # ====================================== #
 #         Configuraciones generales      #
 # ====================================== #
@@ -87,11 +87,6 @@ etiqueta = Label(window, text="Lista de Redes", bg= '#798c93', fg='white')
 etiqueta.pack(side=TOP)
 selected_profile= tk.StringVar()
 
-# canvas = Canvas(window, bg="#798c93",
-# 		height=300, width=300)
-# canvas.pack()
-
-
 # LISTA DE red_labelES.
 profiles_combo = ttk.Combobox(window, textvariable=selected_profile)
  # NOMBRE DE LA red_label.
@@ -102,17 +97,17 @@ red_label.place(x=30,y=100,width=240,height=30)
 pass_label = Label(window)
 pass_label.pack()
 pass_label.place(x=30,y=150,width=240,height=30)
-
+# Cifrado de la red
 cifrado_label = Label(window)
 cifrado_label.pack()
 cifrado_label.place(x=30, y=200, width=240,height=30)
-
+# Ayuda de donde encontrar los qr guardados
 ayuda_label = Label(window, text='Los códigos QR se encuentran en \n la carpeta redes_guardadas de la carpeta Documentos.') 
 ayuda_label.pack()
 ayuda_label.place(x=0, y=250, width=300,height=50)
 ayuda_label['fg'] = "white"
 ayuda_label['bg'] = "#5fb878"
-
+# Formateo de colores de los label de información.
 pass_label['fg'] = "#2f3d4c"
 pass_label['bg'] = "#a9bfaf"
 red_label['fg'] = "#2f3d4c"
@@ -125,7 +120,6 @@ entorno['USERPROFILE']
  # Se define el nombre de la carpeta o directorio a crear
 directorio = entorno['USERPROFILE']+"/Documents/redes_guardadas"
 
-
-mostrar_perfiles()
+show_profiles_combo()
 crear_carpeta_qr()
 window.mainloop()
