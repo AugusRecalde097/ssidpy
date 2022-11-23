@@ -4,32 +4,44 @@ import subprocess
 import re
 import qrcode  
 import tkinter as tk 
-import os
+import webbrowser, os
+from tkinter import messagebox
+
+def alert(title, message, kind='info', hidemain=True):
+    if kind not in ('error', 'warning', 'info'):
+        raise ValueError('Unsupported alert kind.')
+
+    show_method = getattr(messagebox, 'show{}'.format(kind))
+    show_method(title, message)
 
 def crear_carpeta_qr():
     if not os.path.isdir(directorio):
         os.mkdir(directorio)
 
+def open_dir_qr():
+    webbrowser.open(os.path.realpath(directorio))
+
 # Función para generar un código qr
-def generate_qr_code(ssid, password, image=True):
+def generate_qr_code():
     # Source: https://git.io/JtLIv
-    text = f"WIFI:T:WPA;S:{ssid};P:{password};;"
+    ssid = ssid_profile.get()
+    password = pass_profile.get()
 
-    qr = qrcode.QRCode(version=1,
-                       error_correction=qrcode.constants.ERROR_CORRECT_L,
-                       box_size=10,
-                       border=4)
-    qr.add_data(text)
+    if ssid != "" :
+        text = f"WIFI:T:WPA;S:{ssid};P:{password};;"
 
-    if image:
+        qr = qrcode.QRCode(version=1,
+                        error_correction=qrcode.constants.ERROR_CORRECT_L,
+                        box_size=10,
+                        border=4)
+        qr.add_data(text)
+
         file_name = ssid.replace(" ", "_") + ".png"
         img = qr.make_image()
         img.save(directorio+"/"+file_name)
         img.show(directorio+"/"+file_name)
-        # print(f"QR code has been saved to {file_name}")
     else:
-        qr.make()
-        qr.print_tty()
+        alert('Error al generar QR', 'Debe seleccionar una red antes de generar el QRCode', 'error')
 # =================================================================
 def search_profiles(name):
 
@@ -48,8 +60,10 @@ def search_profiles(name):
         pass_label['text'] = "Contraseña: "+password[0]
         red_label['text'] = "SSID: "+name
         cifrado_label['text'] = "Cifrado: "+cifrado[0]
-        
-        generate_qr_code(name, password[0])
+
+        ssid_profile.set(name)
+        pass_profile.set(password[0])
+        # generate_qr_code(name, password[0])
         
 # =================================================================
 def show_profiles_combo():
@@ -78,14 +92,17 @@ def show_profile_selected(self):
 #         Configuraciones generales      #
 # ====================================== #
 window = Tk()
-window.geometry("300x300")
-window.title("Redes guardadas en la computadora")
+window.geometry("300x350")
+window.title("Redes guardadas")
 window.configure(bg='#798c93')
 window.resizable(False, False)
 # Titulo
 etiqueta = Label(window, text="Lista de Redes", bg= '#798c93', fg='white')
 etiqueta.pack(side=TOP)
 selected_profile= tk.StringVar()
+
+ssid_profile= tk.StringVar()
+pass_profile= tk.StringVar()
 
 # LISTA DE red_labelES.
 profiles_combo = ttk.Combobox(window, textvariable=selected_profile)
@@ -101,12 +118,33 @@ pass_label.place(x=30,y=150,width=240,height=30)
 cifrado_label = Label(window)
 cifrado_label.pack()
 cifrado_label.place(x=30, y=200, width=240,height=30)
+
 # Ayuda de donde encontrar los qr guardados
-ayuda_label = Label(window, text='Los códigos QR se encuentran en \n la carpeta Documentos > redes_guardadas') 
-ayuda_label.pack()
-ayuda_label.place(x=0, y=250, width=300,height=50)
-ayuda_label['fg'] = "white"
-ayuda_label['bg'] = "#5fb878"
+espacio_2 = Label(window, text=' ', bg='#798c93') 
+espacio_2.pack(side=tk.BOTTOM)
+# Ayuda de donde encontrar los qr guardados
+show_qr_button = Button(window, text='Abrir carpeta de QR guardadas',border=3) 
+show_qr_button.pack(side=tk.BOTTOM)
+# show_qr_button.place(x=75, y=350, width=200,height=50)
+show_qr_button['fg'] = "white"
+show_qr_button['bg'] = "#2f3d4c"
+show_qr_button['command'] = open_dir_qr
+
+
+# Ayuda de donde encontrar los qr guardados
+espacio_1 = Label(window, text=' ', bg='#798c93') 
+espacio_1.pack(side=tk.BOTTOM)
+
+# Ayuda de donde encontrar los qr guardados
+show_qr_button = Button(window, text='Generar imagen QR') 
+show_qr_button.pack(side=tk.BOTTOM)
+# show_qr_button.place(x=75, y=350, width=200,height=50)
+show_qr_button['fg'] = "white"
+show_qr_button['bg'] = "#2f3d4c"
+show_qr_button['command'] = generate_qr_code
+
+
+
 # Formateo de colores de los label de información.
 pass_label['fg'] = "#2f3d4c"
 pass_label['bg'] = "#a9bfaf"
