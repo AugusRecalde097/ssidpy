@@ -102,7 +102,7 @@ cifrado_label = Label(window)
 cifrado_label.pack()
 cifrado_label.place(x=30, y=200, width=240,height=30)
 # Ayuda de donde encontrar los qr guardados
-ayuda_label = Label(window, text='Los códigos QR se encuentran en \n la carpeta redes_guardadas de la carpeta Documentos.') 
+ayuda_label = Label(window, text='Los códigos QR se encuentran en \n la carpeta Documentos > redes_guardadas') 
 ayuda_label.pack()
 ayuda_label.place(x=0, y=250, width=300,height=50)
 ayuda_label['fg'] = "white"
@@ -118,7 +118,7 @@ cifrado_label['bg'] = "#a9bfaf"
 entorno = os.environ
 entorno['USERPROFILE']
  # Se define el nombre de la carpeta o directorio a crear
-directorio = entorno['USERPROFILE']+"/Documents/redes_guardadas"
+directorio = entorno['USERPROFILE']+"/Documents/Redes Guardadas"
 
 show_profiles_combo()
 crear_carpeta_qr()
