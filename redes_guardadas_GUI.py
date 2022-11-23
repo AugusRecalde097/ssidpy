@@ -39,24 +39,16 @@ def Buscarred_label(name):
     if(len(error) > 0):
         red_label['text'] = 'Error: No se encuentra el perfil'
         red_label['fg'] = "white"
-        red_label['bg'] = "red_label"
+        red_label['bg'] = "#C95C76"
 
     else:
         password = re.findall("Contenido de la clave  : (.*)\r", profile_info_pass)
         cifrado = re.findall("Autenticaci¢n                  : (.*)\r", profile_info_pass)
 
         pass_label['text'] = "Contraseña: "+password[0]
-        pass_label['fg'] = "white"
-        pass_label['bg'] = "#5fb878"
-        
         red_label['text'] = "SSID: "+name
-        red_label['fg'] = "white"
-        red_label['bg'] = "#5fb878"
-        # print(cifrado)
         cifrado_label['text'] = "Cifrado: "+cifrado[0]
-        cifrado_label['fg'] = "white"
-        cifrado_label['bg'] = "#5fb878"
-
+        
         generate_qr_code(name, password[0])
         
 
@@ -93,7 +85,7 @@ etiqueta = Label(window, text="Lista de Redes")
 etiqueta.pack(side=TOP)
 selected_profile= tk.StringVar()
 
-canvas = Canvas(window, bg="yellow",
+canvas = Canvas(window, bg="#798c93",
 		height=300, width=300)
 canvas.pack()
 
@@ -118,6 +110,13 @@ ayuda_label.pack()
 ayuda_label.place(x=0, y=250, width=300,height=50)
 ayuda_label['fg'] = "white"
 ayuda_label['bg'] = "#5fb878"
+
+pass_label['fg'] = "#2f3d4c"
+pass_label['bg'] = "#a9bfaf"
+red_label['fg'] = "#2f3d4c"
+red_label['bg'] = "#a9bfaf"
+cifrado_label['fg'] = "#2f3d4c"
+cifrado_label['bg'] = "#a9bfaf"
 
 entorno = os.environ
 entorno['USERPROFILE']
